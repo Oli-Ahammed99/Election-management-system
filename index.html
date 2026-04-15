@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Election Management System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="emblem" aria-hidden="true">EC</div>
+        <div>
+          <h1>Election Management System</h1>
+          <p class="subtitle">National Election Operations & Monitoring Portal</p>
+        </div>
+      </div>
+      <div class="election-status card">
+        <span class="badge">Simulation Environment</span>
+        <p><strong>Election Day Window:</strong> 08:00 - 17:00</p>
+        <p><strong>Security Profile:</strong> Role-Based Access Control</p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <nav class="sidebar" aria-label="Primary">
+        <section class="auth-card">
+          <h3>Staff Login</h3>
+          <p class="auth-note">Voters can use lookup without login. Officers and admin must sign in.</p>
+          <form id="staff-login-form" class="form-grid compact">
+            <label for="staffRole">Role</label>
+            <select id="staffRole" required>
+              <option value="apo">Assistant Presiding Officer (APO)</option>
+              <option value="po">Presiding Officer (PO)</option>
+              <option value="aro">Assistant Returning Officer (ARO)</option>
+              <option value="ro">Returning Officer (RO)</option>
+              <option value="admin">Admin</option>
+            </select>
+            <label for="staffUser">Username</label>
+            <input id="staffUser" type="text" placeholder="Enter username" required />
+            <label for="staffPass">Password</label>
+            <input id="staffPass" type="password" placeholder="Enter password" required />
+            <button type="submit">Login</button>
+            <button id="logout-btn" type="button" class="secondary">Logout</button>
+          </form>
+          <div id="auth-message" class="info"></div>
+          <small id="auth-status">Current access: Voter/Public only</small>
+        </section>
+
+        <button class="tab active" data-target="voter-module">Voter Services</button>
+        <button class="tab" data-target="record-module" data-role="apo">Record Votes (APO)</button>
+        <button class="tab" data-target="verify-module" data-role="po">Verify Results (PO)</button>
+        <button class="tab" data-target="aggregate-module" data-role="aro">Aggregate (ARO)</button>
+        <button class="tab" data-target="publish-module" data-role="ro">Publish (RO)</button>
+        <button class="tab" data-target="admin-module" data-role="admin">Admin Console</button>
+      </nav>
+
+      <section class="content">
+        <section class="overview-grid">
+          <div class="overview-card">
+            <p class="overview-label">Constituencies</p>
+            <strong>02</strong>
+          </div>
+          <div class="overview-card">
+            <p class="overview-label">Stations Online</p>
+            <strong>02 / 02</strong>
+          </div>
+          <div class="overview-card">
+            <p class="overview-label">Integrity Checks</p>
+            <strong>Active</strong>
+          </div>
+        </section>
+
+        <article id="voter-module" class="panel active" aria-live="polite">
+          <h2>Voter Information Lookup</h2>
+          <p class="panel-subtitle">Public self-service: search by Voter ID / NID to view assigned constituency, station, and booth.</p>
+          <form id="voter-search-form" class="form-grid">
+            <label for="voterId">Voter ID / NID</label>
+            <input id="voterId" type="text" placeholder="e.g. NID1001" required />
+            <button type="submit">Search</button>
+          </form>
+          <div id="voter-result" class="result-card hidden"></div>
+        </article>
+
+        <article id="record-module" class="panel">
+          <h2>Polling Station Vote Entry</h2>
+          <p class="panel-subtitle">APO workflow: enter candidate-wise counts and validate against issued ballots before submission.</p>
+          <form id="record-form" class="form-grid">
+            <label for="stationSelect">Polling Station</label>
+            <select id="stationSelect"></select>
+            <label for="issuedBallots">Issued Ballots</label>
+            <input id="issuedBallots" type="number" min="0" required />
+            <div id="candidate-inputs" class="candidate-inputs"></div>
+            <button type="submit">Submit Station Result</button>
+          </form>
+          <div id="record-message" class="info"></div>
+        </article>
+
+        <article id="verify-module" class="panel">
+          <h2>Verification Queue</h2>
+          <p class="panel-subtitle">PO workflow: verify submitted station records and either approve for aggregation or reject for correction.</p>
+          <div id="verification-list"></div>
+        </article>
+
+        <article id="aggregate-module" class="panel">
+          <h2>Constituency Consolidation</h2>
+          <p class="panel-subtitle">ARO workflow: aggregate verified station results and generate constituency ranking.</p>
+          <form id="aggregate-form" class="form-grid">
+            <label for="constituencySelect">Constituency</label>
+            <select id="constituencySelect"></select>
+            <button type="submit">Aggregate Result</button>
+          </form>
+          <div id="aggregate-output" class="result-card hidden"></div>
+        </article>
+
+        <article id="publish-module" class="panel">
+          <h2>Official Result Publication</h2>
+          <p class="panel-subtitle">RO workflow: publish approved final constituency outcomes for public access.</p>
+          <button id="publish-btn">Publish Final Results</button>
+          <div id="public-results" class="results-grid"></div>
+        </article>
+
+        <article id="admin-module" class="panel">
+          <h2>Admin Console</h2>
+          <p class="panel-subtitle">Administrative oversight of master entities, operational readiness and election constraints.</p>
+          <div class="kpis">
+            <div class="kpi"><strong id="kpi-voters">0</strong><span>Registered Voters</span></div>
+            <div class="kpi"><strong id="kpi-candidates">0</strong><span>Candidates</span></div>
+            <div class="kpi"><strong id="kpi-stations">0</strong><span>Polling Stations</span></div>
+            <div class="kpi"><strong id="kpi-booths">0</strong><span>Booths</span></div>
+          </div>
+          <ul class="rules">
+            <li>One voter can vote only once.</li>
+            <li>Total votes must not exceed issued ballots.</li>
+            <li>Results require verification before aggregation.</li>
+            <li>Only role-authorized workflows are available per module.</li>
+          </ul>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <p>EMS Prototype aligned to CSE327 SRS modules and election constraints.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
