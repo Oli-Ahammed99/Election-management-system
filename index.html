@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Election Management System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>Election Management System</h1>
+        <p class="subtitle">Secure, transparent and role-based election operations platform</p>
+      </div>
+      <div class="election-status">
+        <span class="badge">Simulation Mode</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <nav class="sidebar" aria-label="Primary">
+        <button class="tab active" data-target="voter-module">Voter Services</button>
+        <button class="tab" data-target="record-module">Record Votes (APO)</button>
+        <button class="tab" data-target="verify-module">Verify Results (PO)</button>
+        <button class="tab" data-target="aggregate-module">Aggregate (ARO)</button>
+        <button class="tab" data-target="publish-module">Publish (RO)</button>
+        <button class="tab" data-target="admin-module">Admin Console</button>
+      </nav>
+
+      <section class="content">
+        <article id="voter-module" class="panel active" aria-live="polite">
+          <h2>Voter Information Lookup</h2>
+          <p>Search by Voter ID / NID to view constituency, assigned polling station and booth.</p>
+          <form id="voter-search-form" class="form-grid">
+            <label for="voterId">Voter ID / NID</label>
+            <input id="voterId" type="text" placeholder="e.g. NID1001" required />
+            <button type="submit">Search</button>
+          </form>
+          <div id="voter-result" class="result-card hidden"></div>
+        </article>
+
+        <article id="record-module" class="panel">
+          <h2>Polling Station Vote Entry</h2>
+          <p>Assistant Presiding Officer records candidate-wise votes with ballot validation.</p>
+          <form id="record-form" class="form-grid">
+            <label for="stationSelect">Polling Station</label>
+            <select id="stationSelect"></select>
+            <label for="issuedBallots">Issued Ballots</label>
+            <input id="issuedBallots" type="number" min="0" required />
+            <div id="candidate-inputs" class="candidate-inputs"></div>
+            <button type="submit">Submit Station Result</button>
+          </form>
+          <div id="record-message" class="info"></div>
+        </article>
+
+        <article id="verify-module" class="panel">
+          <h2>Verification Queue</h2>
+          <p>Presiding Officer reviews submitted station results and approves/rejects them.</p>
+          <div id="verification-list"></div>
+        </article>
+
+        <article id="aggregate-module" class="panel">
+          <h2>Constituency Consolidation</h2>
+          <p>Assistant Returning Officer aggregates only verified station results.</p>
+          <form id="aggregate-form" class="form-grid">
+            <label for="constituencySelect">Constituency</label>
+            <select id="constituencySelect"></select>
+            <button type="submit">Aggregate Result</button>
+          </form>
+          <div id="aggregate-output" class="result-card hidden"></div>
+        </article>
+
+        <article id="publish-module" class="panel">
+          <h2>Official Result Publication</h2>
+          <p>Returning Officer publishes finalized constituency outcomes for public viewing.</p>
+          <button id="publish-btn">Publish Final Results</button>
+          <div id="public-results" class="results-grid"></div>
+        </article>
+
+        <article id="admin-module" class="panel">
+          <h2>Admin Console</h2>
+          <p>Master data and system constraints overview.</p>
+          <div class="kpis">
+            <div class="kpi"><strong id="kpi-voters">0</strong><span>Registered Voters</span></div>
+            <div class="kpi"><strong id="kpi-candidates">0</strong><span>Candidates</span></div>
+            <div class="kpi"><strong id="kpi-stations">0</strong><span>Polling Stations</span></div>
+            <div class="kpi"><strong id="kpi-booths">0</strong><span>Booths</span></div>
+          </div>
+          <ul class="rules">
+            <li>One voter can vote only once.</li>
+            <li>Total votes must not exceed issued ballots.</li>
+            <li>Results require verification before aggregation.</li>
+            <li>Only role-authorized workflows are available per module.</li>
+          </ul>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <p>EMS Prototype aligned to CSE327 SRS modules and election constraints.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
